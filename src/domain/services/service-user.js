@@ -19,7 +19,7 @@ exports.GetAll = async (req, res) => {
     } else {
       (message = 'Success GetAll Users'),
         (data = respOrm),
-        (statuscode = data.length > 0 ? enum_.CODE_OK : enum_.CODE_SERGIED);
+        (statuscode = data.length > 0 ? enum_.CODE_OK : enum_.CODE_NO_CONTENT);
     }
     response = await magic.ResponseService(status, errorcode, message, data);
     return res.status(statuscode).send(response);
