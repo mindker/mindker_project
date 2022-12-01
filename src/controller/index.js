@@ -7,7 +7,9 @@ const decks = require('../domain/services/service-deck');
 const cards = require('../domain/services/service-card'); 
  */
 router.get('/users', users.GetAll);
+
 router.post('/users', users.Register);
+
 
 router.get('/decks', decks.GetAll);
 router.post('/decks', decks.Create);
@@ -16,5 +18,6 @@ router.patch('/decks/:id', decks.Update);
 router.get('/decks/:id', decks.GetById);
 router.get('/decks/deck/:title', decks.GetByTitle);
 router.get('/decks/author/:author', decks.GetByAuthor);
+
 
 module.exports = router;
