@@ -7,7 +7,7 @@ module.exports = (db) => {
       cards: [{ type: db.Schema.Types.ObjectId, ref: 'Cards' }],
       isOpen: { type: Boolean, required: true },
       author: { type: db.Schema.Types.ObjectId, ref: 'Users' },
-      likes: { type: Number, required: true },
+      likes: { type: Number, default: 0 },
       tags: [{ type: String }],
     },
     {
