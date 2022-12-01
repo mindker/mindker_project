@@ -7,4 +7,6 @@ const cards = require('../domain/services/service-card'); */
 
 router.get('/users', users.GetAll);
 
+router.post('/users', users.Register);
+
 module.exports = router;
