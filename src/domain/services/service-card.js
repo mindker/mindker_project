@@ -1,6 +1,6 @@
 const magic = require('../../utils/magic');
 const enum_ = require('../../utils/enum');
-const ormUser = require('../orm/orm-user');
+const ormCard = require('../orm/orm-card');
 
 exports.GetAll = async (req, res) => {
   let status = 'Success';
@@ -10,14 +10,14 @@ exports.GetAll = async (req, res) => {
   let statuscode = 0;
   let response = {};
   try {
-    let respOrm = await ormUser.GetAll();
+    let respOrm = await ormCard.GetAll();
     if (respOrm.err) {
       (status = 'Failure'),
         (errorcode = respOrm.err.code),
         (message = respOrm.err.message),
         (statuscode = enum_.CODE_BAD_REQUEST);
     } else {
-      (message = 'Success GetAll Users'),
+      (message = 'Success GetAll Cards'),
         (data = respOrm),
         (statuscode = data.length > 0 ? enum_.CODE_OK : enum_.CODE_NO_CONTENT);
     }
@@ -30,7 +30,7 @@ exports.GetAll = async (req, res) => {
   }
 };
 
-exports.Register = async (req, res) => {
+exports.Create = async (req, res) => {
   let status = 'Success',
     errorcode = '',
     message = '',
@@ -38,30 +38,20 @@ exports.Register = async (req, res) => {
     statuscode = 0,
     response = {};
   try {
-    const Name = req.body.name;
-    const Nickname = req.body.nickname;
-    const Email = req.body.email;
-    const Password = req.body.password;
-    const Avatar = req.body.avatar;
-    const CreatedDecks = req.body.createdDecks;
-    const DownloadedDecks = req.body.downloadedDecks;
-    if (Name && Nickname && Email && Password) {
-      let respOrm = await ormUser.Register(
-        Name,
-        Nickname,
-        Email,
-        Password,
-        Avatar,
-        CreatedDecks,
-        DownloadedDecks,
-      );
+    const Question = req.body.question;
+    const Answer = req.body.answer;
+    const Difficulty = req.body.difficulty;
+    const Resources = req.body.resources;
+    const IdDeck = req.body.idDeck;
+    if (Question && Answer) {
+      let respOrm = await ormCard.Create(Question, Answer, Difficulty, Resources, IdDeck);
       if (respOrm.err) {
         (status = 'Failure'),
           (errorcode = respOrm.err.code),
           (message = respOrm.err.messsage),
           (statuscode = enum_.CODE_BAD_REQUEST);
       } else {
-        (message = 'User created'), (data = respOrm), (statuscode = enum_.CODE_CREATED);
+        (message = 'Card created'), (data = respOrm), (statuscode = enum_.CODE_CREATED);
       }
     } else {
       (status = 'Failure'),
@@ -78,6 +68,7 @@ exports.Register = async (req, res) => {
       .send(await magic.ResponseService('Failure', enum_.CRASH_LOGIC, 'err', ''));
   }
 };
+
 exports.Delete = async (req, res) => {
   let status = 'Success',
     errorcode = '',
@@ -88,14 +79,14 @@ exports.Delete = async (req, res) => {
   try {
     const { id } = req.params;
     if (id) {
-      let respOrm = await ormUser.Delete(id);
+      let respOrm = await ormCard.Delete(id);
       if (respOrm.err) {
         (status = 'Failure'),
           (errorcode = respOrm.err.code),
           (message = respOrm.err.messsage),
           (statuscode = enum_.CODE_BAD_REQUEST);
       } else {
-        (message = 'User deleted'), (statuscode = enum_.CODE_OK), (data = respOrm);
+        (message = 'Card deleted'), (statuscode = enum_.CODE_OK), (data = respOrm);
       }
     } else {
       (status = 'Failure'),
@@ -112,6 +103,7 @@ exports.Delete = async (req, res) => {
       .send(await magic.ResponseService('Failure', enum_.CRASH_LOGIC, 'err', ''));
   }
 };
+
 exports.Update = async (req, res) => {
   let status = 'Success',
     errorcode = '',
@@ -122,19 +114,17 @@ exports.Update = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const updatedUser = {
-      name: req.body.name,
-      nickname: req.body.nickname,
-      avatar: req.body.avatar,
-      password: req.body.password,
-      email: req.body.email,
-      createdDecks: req.body.createdDecks,
-      downloadedDecks: req.body.downloadedDecks,
+    const updatedCard = {
+      question: req.body.question,
+      answer: req.body.answer,
+      difficulty: req.body.difficulty,
+      resources: req.body.resources,
+      idDeck: req.body.idDeck,
       _id: id,
     };
 
-    if (id && updatedUser) {
-      let respOrm = await ormUser.Update(id, updatedUser);
+    if (id && updatedCard) {
+      let respOrm = await ormCard.Update(id, updatedCard);
 
       if (respOrm.err) {
         (status = 'Failure'),
@@ -142,7 +132,7 @@ exports.Update = async (req, res) => {
           (message = respOrm.err.messsage),
           (statuscode = enum_.CODE_BAD_REQUEST);
       } else {
-        (message = 'User updated'), (statuscode = enum_.CODE_OK), (data = updatedUser);
+        (message = 'Card updated'), (statuscode = enum_.CODE_OK), (data = updatedCard);
       }
     } else {
       (status = 'Failure'),
@@ -169,73 +159,14 @@ exports.GetById = async (req, res) => {
   let response = {};
   try {
     const { id } = req.params;
-    let respOrm = await ormUser.GetById(id);
+    let respOrm = await ormCard.GetById(id);
     if (respOrm.err) {
       (status = 'Failure'),
         (errorcode = respOrm.err.code),
         (message = respOrm.err.message),
         (statuscode = enum_.CODE_BAD_REQUEST);
     } else {
-      (message = 'Success getting the user'),
-        (data = respOrm),
-        (statuscode = data ? enum_.CODE_OK : enum_.CODE_NO_CONTENT);
-    }
-    response = await magic.ResponseService(status, errorcode, message, data);
-    return res.status(statuscode).send(response);
-  } catch (error) {
-    magic.LogDanger('error: ', error);
-    response = await magic.ResponseService('Failure', enum_.CODE_BAD_REQUEST, error, '');
-    return res.status(enum_.CODE_INTERNAL_SERVER_ERROR).send(response);
-  }
-};
-
-exports.GetByNickName = async (req, res) => {
-  let status = 'Success';
-  let errorcode = '';
-  let message = '';
-  let data = '';
-  let statuscode = 0;
-  let response = {};
-  try {
-    const { nickName } = req.params;
-    let respOrm = await ormUser.GetByNickName(nickName);
-
-    if (respOrm.err) {
-      (status = 'Failure'),
-        (errorcode = respOrm.err.code),
-        (message = respOrm.err.message),
-        (statuscode = enum_.CODE_BAD_REQUEST);
-    } else {
-      (message = 'Success getting the user'),
-        (data = respOrm),
-        (statuscode = data ? enum_.CODE_OK : enum_.CODE_NO_CONTENT);
-    }
-    response = await magic.ResponseService(status, errorcode, message, data);
-    return res.status(statuscode).send(response);
-  } catch (error) {
-    magic.LogDanger('error: ', error);
-    response = await magic.ResponseService('Failure', enum_.CODE_BAD_REQUEST, error, '');
-    return res.status(enum_.CODE_INTERNAL_SERVER_ERROR).send(response);
-  }
-};
-
-exports.GetByName = async (req, res) => {
-  let status = 'Success';
-  let errorcode = '';
-  let message = '';
-  let data = '';
-  let statuscode = 0;
-  let response = {};
-  try {
-    const { name } = req.params;
-    let respOrm = await ormUser.GetByName(name);
-    if (respOrm.err) {
-      (status = 'Failure'),
-        (errorcode = respOrm.err.code),
-        (message = respOrm.err.message),
-        (statuscode = enum_.CODE_BAD_REQUEST);
-    } else {
-      (message = 'Success getting the user'),
+      (message = 'Success getting the card'),
         (data = respOrm),
         (statuscode = data ? enum_.CODE_OK : enum_.CODE_NO_CONTENT);
     }
