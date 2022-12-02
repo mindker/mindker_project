@@ -16,7 +16,7 @@ exports.Create = async (
   image,
   cards,
   isOpen,
-  author,
+  idUser,
   likes,
   tags,
 ) => {
@@ -27,10 +27,19 @@ exports.Create = async (
       image: image,
       cards: cards,
       isOpen: isOpen,
-      author: author,
+      author: idUser,
       likes: likes,
       tags: tags,
     });
+
+    const user = await conn.db.connMongo.User.findById(idUser);
+
+    if (user) {
+      data.author = user._id;
+      user.createdDecks = user.createdDecks.concat(data._id);
+      await user.save();
+    }
+
     data.save();
     return true;
   } catch (error) {
@@ -41,6 +50,17 @@ exports.Create = async (
 
 exports.Delete = async (id) => {
   try {
+    const deckToDelete = await conn.db.connMongo.Deck.findById(id);
+    const user = await conn.db.connMongo.User.findById(deckToDelete.author);
+    if (user) {
+      for (const deck of user.createdDecks) {
+        if (deck == id) {
+          const position = user.createdDecks.indexOf(deck);
+          user.createdDecks.splice(position, 1);
+        }
+      }
+      await user.save();
+    }
     return await conn.db.connMongo.Deck.findByIdAndDelete(id);
   } catch (error) {
     magic.LogDanger('Cannot Delete deck', error);
@@ -60,7 +80,7 @@ exports.Update = async (id, updatedDeck) => {
 exports.GetById = async (id) => {
   try {
     console.log('el id : ' + id);
-    return await conn.db.connMongo.Deck.findById(id); /* .populate('author'); */
+    return await conn.db.connMongo.Deck.findById(id).populate('author');
   } catch (error) {
     magic.LogDanger('Cannot get the deck by its ID', error);
     return await { err: { code: 123, message: error } };
