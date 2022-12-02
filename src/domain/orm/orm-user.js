@@ -17,6 +17,7 @@ exports.Register = async (
   Avatar,
   CreatedDecks,
   DownloadedDecks,
+  Role,
 ) => {
   try {
     const data = await new conn.db.connMongo.User({
@@ -27,6 +28,7 @@ exports.Register = async (
       avatar: Avatar,
       createdDecks: CreatedDecks,
       downloadedDecks: DownloadedDecks,
+      role: Role,
     });
 
     data.password = bcrypt.hashSync(data.password, 8);
