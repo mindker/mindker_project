@@ -37,3 +37,48 @@ exports.Register = async (
     return await { err: { code: 123, message: error } };
   }
 };
+exports.Delete = async (id) => {
+  try {
+    return await conn.db.connMongo.User.findByIdAndDelete(id);
+  } catch (error) {
+    magic.LogDanger('Cannot Delete user', error);
+    return await { err: { code: 123, message: error } };
+  }
+};
+
+exports.Update = async (id, updatedUser) => {
+  try {
+    return await conn.db.connMongo.User.findByIdAndUpdate(id, updatedUser);
+  } catch (error) {
+    magic.LogDanger('Cannot Update user', error);
+    return await { err: { code: 123, message: error } };
+  }
+};
+
+exports.GetById = async (id) => {
+  try {
+    console.log('el id : ' + id);
+    return await conn.db.connMongo.User.findById(id); /* .populate('author'); */
+  } catch (error) {
+    magic.LogDanger('Cannot get the deck by its ID', error);
+    return await { err: { code: 123, message: error } };
+  }
+};
+
+exports.GetByNickName = async (nickName) => {
+  try {
+    return await conn.db.connMongo.User.findOne({ nickName: nickName }); //populate('')
+  } catch (error) {
+    magic.LogDanger('Cannot get the deck by its nickname', error);
+    return await { err: { code: 123, message: error } };
+  }
+};
+
+exports.GetByName = async (name) => {
+  try {
+    return await conn.db.connMongo.User.find({ name: name });
+  } catch (error) {
+    magic.LogDanger('Cannot get the deck by its name', error);
+    return await { err: { code: 123, message: error } };
+  }
+};
