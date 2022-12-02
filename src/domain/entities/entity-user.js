@@ -8,6 +8,7 @@ module.exports = (db) => {
       avatar: { type: String },
       createdDecks: [{ type: db.Schema.Types.ObjectId, ref: 'Decks' }],
       downloadedDecks: [{ type: db.Schema.Types.ObjectId, ref: 'Decks' }],
+      role: { type: String, default: 'user' },
     },
     {
       timestamps: true,
