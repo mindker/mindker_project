@@ -60,7 +60,7 @@ exports.GetById = async (id) => {
     console.log('el id : ' + id);
     return await conn.db.connMongo.User.findById(id); /* .populate('author'); */
   } catch (error) {
-    magic.LogDanger('Cannot get the deck by its ID', error);
+    magic.LogDanger('Cannot get the user by its ID', error);
     return await { err: { code: 123, message: error } };
   }
 };
@@ -69,7 +69,7 @@ exports.GetByNickName = async (nickName) => {
   try {
     return await conn.db.connMongo.User.findOne({ nickName: nickName }); //populate('')
   } catch (error) {
-    magic.LogDanger('Cannot get the deck by its nickname', error);
+    magic.LogDanger('Cannot get the user by its nickname', error);
     return await { err: { code: 123, message: error } };
   }
 };
