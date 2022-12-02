@@ -163,7 +163,6 @@ exports.Update = async (req, res) => {
     const updatedUser = {
       name: req.body.name,
       nickname: req.body.nickname,
-      avatar: req.file.path,
       password: req.body.password,
       email: req.body.email,
       createdDecks: req.body.createdDecks,

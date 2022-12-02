@@ -98,8 +98,10 @@ exports.Update = async (id, updatedUser, req) => {
     req.file
       ? (updatedUser.avatar = req.file.path)
       : (updatedUser.avatar = "there's no image");
+    console.log(updatedUser.password);
+    updatedUser.password &&
+      (updatedUser.password = bcrypt.hashSync(updatedUser.password, 8));
 
-    updatedUser.password = bcrypt.hashSync(updatedUser.password, 8);
     return await conn.db.connMongo.User.findByIdAndUpdate(id, updatedUser);
   } catch (error) {
     magic.LogDanger('Cannot Update user', error);
