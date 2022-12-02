@@ -3,7 +3,7 @@ const magic = require('../../utils/magic');
 const bcrypt = require('bcrypt');
 exports.GetAll = async () => {
   try {
-    return await conn.db.connMongo.User.find(); //.populate('decks')
+    return await conn.db.connMongo.User.find().populate('createdDecks');
   } catch (error) {
     magic.LogDanger('Cannot getAll users', error);
   }
