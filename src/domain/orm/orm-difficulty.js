@@ -8,12 +8,21 @@ exports.GetAll = async () => {
   }
 };
 
-exports.Create = async (idUser, level) => {
+exports.Create = async (idUser, level, idCard) => {
   try {
     const data = await new conn.db.connMongo.Difficulty({
       idUser: idUser,
       level: level,
+      idCard: idCard,
     });
+
+    const card = await conn.db.connMongo.Card.findById(idCard);
+
+    if (card) {
+      data.idCard = card._id;
+      card.difficulty = card.difficulty.concat(data._id);
+      await card.save();
+    }
 
     data.save();
     return true;
@@ -24,6 +33,17 @@ exports.Create = async (idUser, level) => {
 };
 exports.Delete = async (id) => {
   try {
+    const difficultyToDelete = await conn.db.connMongo.Difficulty.findById(id);
+    const card = await conn.db.connMongo.Card.findById(difficultyToDelete.idCard);
+    const user = await conn.db.connMongo.User.findById(difficultyToDelete.idUser);
+    if (card && (!card.isOpen || user.role === 'admin')) {
+      for (const difficulty of card.difficulty) {
+        if (difficulty == id) {
+          const position = card.difficulty.indexOf(difficulty);
+          card.difficulty.splice(position, 1);
+        }
+      }
+    }
     return await conn.db.connMongo.Difficulty.findByIdAndDelete(id);
   } catch (error) {
     magic.LogDanger('Cannot Delete the difficulty', error);

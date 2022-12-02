@@ -40,9 +40,10 @@ exports.Create = async (req, res) => {
   try {
     const IdUser = req.body.idUser;
     const Level = req.body.level;
+    const IdCard = req.body.idCard;
 
-    if (IdUser && Level) {
-      let respOrm = await ormDifficulty.Create(IdUser, Level);
+    if (IdUser) {
+      let respOrm = await ormDifficulty.Create(IdUser, Level, IdCard);
       if (respOrm.err) {
         (status = 'Failure'),
           (errorcode = respOrm.err.code),
