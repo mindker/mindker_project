@@ -91,6 +91,7 @@ exports.Delete = async (req, res) => {
     response = {};
   try {
     const { id } = req.params;
+
     if (id) {
       let respOrm = await ormDeck.Delete(id);
       if (respOrm.err) {
