@@ -40,7 +40,6 @@ exports.Create = async (req, res) => {
   try {
     const Title = req.body.title;
     const Description = req.body.description;
-    const Image = req.body.image;
     const Cards = req.body.cards;
     const IsOpen = req.body.isOpen;
     const Author = req.body.author;
@@ -51,12 +50,12 @@ exports.Create = async (req, res) => {
       let respOrm = await ormDeck.Create(
         Title,
         Description,
-        Image,
         Cards,
         IsOpen,
         Author,
         Likes,
         Tags,
+        req,
       );
       if (respOrm.err) {
         (status = 'Failure'),
@@ -141,7 +140,7 @@ exports.Update = async (req, res) => {
     };
 
     if (id && updatedDeck) {
-      let respOrm = await ormDeck.Update(id, updatedDeck);
+      let respOrm = await ormDeck.Update(id, updatedDeck, req);
 
       if (respOrm.err) {
         (status = 'Failure'),

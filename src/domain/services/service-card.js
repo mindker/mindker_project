@@ -124,7 +124,7 @@ exports.Update = async (req, res) => {
     };
 
     if (id && updatedCard) {
-      let respOrm = await ormCard.Update(id, updatedCard);
+      let respOrm = await ormCard.Update(id, updatedCard, req);
 
       if (respOrm.err) {
         (status = 'Failure'),

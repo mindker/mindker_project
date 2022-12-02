@@ -42,7 +42,6 @@ exports.Register = async (req, res) => {
     const Nickname = req.body.nickname;
     const Email = req.body.email;
     const Password = req.body.password;
-    const Avatar = req.body.avatar;
     const CreatedDecks = req.body.createdDecks;
     const DownloadedDecks = req.body.downloadedDecks;
     if (Name && Nickname && Email && Password) {
@@ -51,7 +50,7 @@ exports.Register = async (req, res) => {
         Nickname,
         Email,
         Password,
-        Avatar,
+        req,
         CreatedDecks,
         DownloadedDecks,
       );
@@ -125,7 +124,7 @@ exports.Update = async (req, res) => {
     const updatedUser = {
       name: req.body.name,
       nickname: req.body.nickname,
-      avatar: req.body.avatar,
+      avatar: req.file.path,
       password: req.body.password,
       email: req.body.email,
       createdDecks: req.body.createdDecks,
@@ -134,7 +133,7 @@ exports.Update = async (req, res) => {
     };
 
     if (id && updatedUser) {
-      let respOrm = await ormUser.Update(id, updatedUser);
+      let respOrm = await ormUser.Update(id, updatedUser, req);
 
       if (respOrm.err) {
         (status = 'Failure'),
