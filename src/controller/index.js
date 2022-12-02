@@ -13,6 +13,7 @@ router.patch('/users/:id', upload.single('avatar'), users.Update);
 router.get('/users/:id', users.GetById);
 router.get('/users/user/:nickName', users.GetByNickName);
 router.get('/users/name/:name', users.GetByName);
+router.post('/users/login', users.Login);
 
 router.get('/decks', decks.GetAll);
 router.post('/decks', upload.single('image'), decks.Create);

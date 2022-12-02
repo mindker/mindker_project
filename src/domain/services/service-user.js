@@ -77,6 +77,45 @@ exports.Register = async (req, res) => {
       .send(await magic.ResponseService('Failure', enum_.CRASH_LOGIC, 'err', ''));
   }
 };
+
+exports.Login = async (req, res) => {
+  let status = 'Success',
+    errorcode = '',
+    message = '',
+    data = '',
+    statuscode = 0,
+    response = {};
+  try {
+    const Nickname = req.body.nickname;
+    const Password = req.body.password;
+
+    if (Nickname && Password) {
+      let respOrm = await ormUser.Login(Nickname, req);
+
+      if (respOrm.err) {
+        (status = 'Failure'),
+          (errorcode = respOrm.err.code),
+          (message = respOrm.err.messsage),
+          (statuscode = enum_.CODE_BAD_REQUEST);
+      } else {
+        (message = 'User logged in'), (data = respOrm), (statuscode = enum_.CODE_OK);
+      }
+    } else {
+      (status = 'Failure'),
+        (errorcode = enum_.ERROR_REQUIREDFIELD),
+        (message = 'All fields are required'),
+        (statuscode = enum_.CODE_BAD_REQUEST);
+    }
+    response = await magic.ResponseService(status, errorcode, message, data);
+    return res.status(statuscode).send(response);
+  } catch (err) {
+    console.log('err = ', err);
+    return res
+      .status(enum_.CODE_INTERNAL_SERVER_ERROR)
+      .send(await magic.ResponseService('Failure', enum_.CRASH_LOGIC, 'err', ''));
+  }
+};
+
 exports.Delete = async (req, res) => {
   let status = 'Success',
     errorcode = '',

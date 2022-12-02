@@ -1,6 +1,7 @@
 const conn = require('../repositories/mongo.repository');
 const magic = require('../../utils/magic');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const { deleteFile } = require('../../middlewares/delete-file');
 exports.GetAll = async () => {
   try {
@@ -45,6 +46,38 @@ exports.Register = async (
     return await { err: { code: 123, message: error } };
   }
 };
+
+exports.Login = async (nickname, req) => {
+  try {
+    const userInfo = await conn.db.connMongo.User.findOne({
+      nickname: nickname,
+    });
+
+    if (bcrypt.compareSync(req.body.password, userInfo.password)) {
+      userInfo.password = null;
+      const token = jwt.sign(
+        {
+          name: userInfo.name,
+          nickname: userInfo.nickname,
+          email: userInfo.email,
+          role: userInfo.role,
+        },
+        req.app.get('secretKey'),
+        { expiresIn: '30h' },
+      );
+      return {
+        user: userInfo,
+        token: token,
+      };
+    } else {
+      return console.log('Incorrect password');
+    }
+  } catch (error) {
+    magic.LogDanger('Cannot log in the user', error);
+    return await { err: { code: 123, message: error } };
+  }
+};
+
 exports.Delete = async (id) => {
   try {
     const deletedUser = await conn.db.connMongo.User.findById(id);
