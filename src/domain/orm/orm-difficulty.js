@@ -1,8 +1,9 @@
 const conn = require('../repositories/mongo.repository');
 const magic = require('../../utils/magic');
-exports.GetAll = async () => {
+
+exports.GetAll = async (limit = 0, skip = 0) => {
   try {
-    return await conn.db.connMongo.Difficulty.find(); //.populate('decks')
+    return await conn.db.connMongo.Difficulty.find().skip(skip).limit(limit);
   } catch (error) {
     magic.LogDanger('Cannot getAll difficulties', error);
   }

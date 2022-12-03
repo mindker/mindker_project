@@ -10,7 +10,9 @@ exports.GetAll = async (req, res) => {
   let statuscode = 0;
   let response = {};
   try {
-    let respOrm = await ormDeck.GetAll();
+    const limit = parseInt(req.query.limit);
+    const skip = parseInt(req.query.skip);
+    let respOrm = await ormDeck.GetAll(limit, skip);
     if (respOrm.err) {
       (status = 'Failure'),
         (errorcode = respOrm.err.code),
