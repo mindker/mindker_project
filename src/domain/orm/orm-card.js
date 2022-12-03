@@ -2,9 +2,12 @@ const conn = require('../repositories/mongo.repository');
 const magic = require('../../utils/magic');
 const { deleteFile } = require('../../middlewares/delete-file');
 
-exports.GetAll = async () => {
+exports.GetAll = async (limit = 0, skip = 0) => {
   try {
-    return await conn.db.connMongo.Card.find().populate('difficulty');
+    return await conn.db.connMongo.Card.find()
+      .populate('difficulty')
+      .skip(skip)
+      .limit(limit);
   } catch (error) {
     magic.LogDanger('Cannot getAll cards', error);
     return await { err: { code: 123, message: error } };

@@ -4,9 +4,12 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { deleteFile } = require('../../middlewares/delete-file');
 
-exports.GetAll = async () => {
+exports.GetAll = async (limit = 0, skip = 0) => {
   try {
-    return await conn.db.connMongo.User.find().populate('createdDecks');
+    return await conn.db.connMongo.User.find()
+      .populate('createdDecks')
+      .skip(skip)
+      .limit(limit);
   } catch (error) {
     magic.LogDanger('Cannot getAll users', error);
   }
