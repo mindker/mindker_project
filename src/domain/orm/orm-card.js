@@ -1,5 +1,6 @@
 const conn = require('../repositories/mongo.repository');
 const magic = require('../../utils/magic');
+const { deleteFile } = require('../../middlewares/delete-file');
 
 exports.GetAll = async () => {
   try {
@@ -10,7 +11,7 @@ exports.GetAll = async () => {
   }
 };
 
-exports.Create = async (question, answer, resources, difficulty, idDeck) => {
+exports.Create = async (question, answer, resources, difficulty, idDeck, req) => {
   try {
     const data = await new conn.db.connMongo.Card({
       question: question,
@@ -19,6 +20,10 @@ exports.Create = async (question, answer, resources, difficulty, idDeck) => {
       difficulty: difficulty,
       idDeck: idDeck,
     });
+
+    if (req.file) {
+      question.length > 1 && (data.question[1] = req.file.path);
+    }
 
     const deck = await conn.db.connMongo.Deck.findById(idDeck);
 
@@ -38,6 +43,9 @@ exports.Create = async (question, answer, resources, difficulty, idDeck) => {
 exports.Delete = async (id) => {
   try {
     const cardToDelete = await conn.db.connMongo.Card.findById(id);
+    if (cardToDelete.image) {
+      await deleteFile(cardToDelete.image);
+    }
     const deck = await conn.db.connMongo.Deck.findById(cardToDelete.idDeck);
     const user = await conn.db.connMongo.User.findById(deck.author);
     if (deck && (!deck.isOpen || user.role === 'admin')) {
@@ -56,8 +64,13 @@ exports.Delete = async (id) => {
   }
 };
 
-exports.Update = async (id, updatedCard) => {
+exports.Update = async (id, updatedCard, req) => {
   try {
+    const olderCard = await conn.db.connMongo.Card.findById(id);
+    olderCard.image && deleteFile(olderCard.image);
+    req.file
+      ? (updatedCard.image = req.file.path)
+      : (updatedCard.image = "there's no image");
     return await conn.db.connMongo.Card.findByIdAndUpdate(id, updatedCard);
   } catch (error) {
     magic.LogDanger('Cannot Update Card', error);

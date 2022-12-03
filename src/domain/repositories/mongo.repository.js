@@ -6,6 +6,7 @@ const deck = require('../entities/entity-deck');
 const difficulty = require('../entities/entity-difficulty');
 const card = require('../entities/entity-card');
 const dotenv = require('dotenv');
+const { setUpCloudinary } = require('../../helpers/cloudinary');
 
 dotenv.config();
 
@@ -25,7 +26,7 @@ if (config.db.mongodb && config.db.mongodb.length > 0) {
     db[c.nameconn].Deck = deck(mongoose);
   });
   exports.db = db;
-
+  setUpCloudinary();
   magic.LogInfo('Conectado a la base de datos');
 } else {
   magic.LogDanger('No existe la base de datos');
