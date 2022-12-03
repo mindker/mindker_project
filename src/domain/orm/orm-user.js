@@ -3,6 +3,7 @@ const magic = require('../../utils/magic');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { deleteFile } = require('../../middlewares/delete-file');
+
 exports.GetAll = async () => {
   try {
     return await conn.db.connMongo.User.find().populate('createdDecks');

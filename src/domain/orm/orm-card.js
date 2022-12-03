@@ -20,13 +20,12 @@ exports.Create = async (question, answer, resources, difficulty, idDeck, req) =>
       difficulty: difficulty,
       idDeck: idDeck,
     });
-
     if (req.file) {
-      question.length > 1 && (data.question[1] = req.file.path);
+      data.questionFile = req.file.path;
+    } else {
+      data.questionFile = 'no image question';
     }
-
     const deck = await conn.db.connMongo.Deck.findById(idDeck);
-
     if (deck) {
       data.idDeck = deck._id;
       deck.cards = deck.cards.concat(data._id);
@@ -43,12 +42,12 @@ exports.Create = async (question, answer, resources, difficulty, idDeck, req) =>
 exports.Delete = async (id) => {
   try {
     const cardToDelete = await conn.db.connMongo.Card.findById(id);
-    if (cardToDelete.image) {
-      await deleteFile(cardToDelete.image);
-    }
     const deck = await conn.db.connMongo.Deck.findById(cardToDelete.idDeck);
     const user = await conn.db.connMongo.User.findById(deck.author);
-    if (deck && (!deck.isOpen || user.role === 'admin')) {
+    if (deck && (!deck.isOpen || user.role == 'admin')) {
+      if (cardToDelete.questionFile) {
+        await deleteFile(cardToDelete.questionFile);
+      }
       for (const card of deck.cards) {
         if (card == id) {
           const position = deck.cards.indexOf(card);
@@ -56,8 +55,12 @@ exports.Delete = async (id) => {
         }
       }
       await deck.save();
+      return await conn.db.connMongo.Card.findByIdAndDelete(id);
+    } else {
+      return magic.LogDanger(
+        'Cannot Delete Card because you are not an admin or this deck is not private',
+      );
     }
-    return await conn.db.connMongo.Card.findByIdAndDelete(id);
   } catch (error) {
     magic.LogDanger('Cannot Delete Card', error);
     return await { err: { code: 123, message: error } };

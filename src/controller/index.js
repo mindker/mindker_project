@@ -5,6 +5,7 @@ const decks = require('../domain/services/service-deck');
 const cards = require('../domain/services/service-card');
 const difficulties = require('../domain/services/service-difficulty');
 const { upload } = require('../middlewares/file');
+//const { isAdmin } = require('../middlewares/admin.middleware');
 
 router.get('/users', users.GetAll);
 router.post('/users', upload.single('avatar'), users.Register);
@@ -24,9 +25,9 @@ router.get('/decks/deck/:title', decks.GetByTitle);
 router.get('/decks/author/:author', decks.GetByAuthor);
 
 router.get('/cards', cards.GetAll);
-router.post('/cards', upload.single('image'), cards.Create);
+router.post('/cards', upload.single('questionFile'), cards.Create);
 router.delete('/cards/:id', cards.Delete);
-router.patch('/cards/:id', upload.single('image'), cards.Update);
+router.patch('/cards/:id', upload.single('questionFile'), cards.Update);
 router.get('/cards/:id', cards.GetById);
 
 router.get('/difficulties', difficulties.GetAll);

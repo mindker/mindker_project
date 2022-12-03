@@ -43,6 +43,7 @@ exports.Register = async (req, res) => {
     const Email = req.body.email;
     const Password = req.body.password;
     const CreatedDecks = req.body.createdDecks;
+    const Role = req.body.role;
     const DownloadedDecks = req.body.downloadedDecks;
     if (Name && Nickname && Email && Password) {
       let respOrm = await ormUser.Register(
@@ -53,6 +54,7 @@ exports.Register = async (req, res) => {
         req,
         CreatedDecks,
         DownloadedDecks,
+        Role,
       );
       if (respOrm.err) {
         (status = 'Failure'),
