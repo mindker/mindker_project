@@ -1,7 +1,8 @@
 module.exports = (db) => {
   const cardSchema = new db.Schema(
     {
-      question: [{ type: String, required: true, trim: true }],
+      question: { type: String, required: true, trim: true },
+      questionFile: { type: String },
       answer: { type: String, required: true, trim: true },
       difficulty: [{ type: db.Schema.Types.ObjectId, ref: 'Difficulties' }],
       resources: [{ type: String }],
