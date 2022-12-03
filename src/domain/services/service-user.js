@@ -174,18 +174,24 @@ exports.Update = async (req, res) => {
 
     if (id && updatedUser) {
       let respOrm = await ormUser.Update(id, updatedUser, req);
-
       if (respOrm.err) {
         (status = 'Failure'),
           (errorcode = respOrm.err.code),
           (message = respOrm.err.messsage),
           (statuscode = enum_.CODE_BAD_REQUEST);
       } else {
-        (message = 'User updated'), (statuscode = enum_.CODE_OK), (data = updatedUser);
+        console.log('resporm: ' + respOrm);
+
+        if (Object.keys(respOrm).length) {
+          (message = 'User updated'), (statuscode = enum_.CODE_OK), (data = updatedUser);
+        } else {
+          (message = 'You are not authorized to update this user'),
+            (statuscode = enum_.CODE_UNAUTHORIZED);
+        }
       }
     } else {
       (status = 'Failure'),
-        (errorcode = enum_.ERROR_REQUIRED_FIELD), //este error no cuadra
+        (errorcode = enum_.ERROR_REQUIRED_FIELD),
         (message = 'id does not exist'),
         (statuscode = enum_.CODE_UNPROCESSABLE_ENTITY);
     }

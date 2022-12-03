@@ -18,7 +18,7 @@ const isAdmin = (req, res, next) => {
   try {
     var token = jwt.verify(jwtStringify, req.app.get('secretKey'));
   } catch (error) {
-    return next(magic.ResponseService(null, 501, 'Token invalid', null));
+    return res.json(setError(401, 'Token invalid'));
   }
 
   const authority = {
