@@ -94,11 +94,12 @@ exports.Delete = async (id) => {
 
 exports.Update = async (id, updatedUser, req) => {
   try {
+    console.log('hemos entrado aqui sin token?');
     const olderUser = await conn.db.connMongo.User.findById(id);
     olderUser.avatar && deleteFile(olderUser.avatar);
     req.file
       ? (updatedUser.avatar = req.file.path)
-      : (updatedUser.avatar = "there's no image");
+      : (updatedUser.avatar = 'avatar did not change');
     updatedUser.password &&
       (updatedUser.password = bcrypt.hashSync(updatedUser.password, 8));
 

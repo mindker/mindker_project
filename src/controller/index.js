@@ -5,29 +5,30 @@ const decks = require('../domain/services/service-deck');
 const cards = require('../domain/services/service-card');
 const difficulties = require('../domain/services/service-difficulty');
 const { upload } = require('../middlewares/file');
-//const { isAdmin } = require('../middlewares/admin.middleware');
+const { isAdmin } = require('../middlewares/admin.middleware');
+const { isAuth } = require('../middlewares/auth.middleware');
 
-router.get('/users', users.GetAll);
+router.get('/users', [isAdmin], users.GetAll);
 router.post('/users', upload.single('avatar'), users.Register);
-router.delete('/users/:id', users.Delete);
-router.patch('/users/:id', upload.single('avatar'), users.Update);
-router.get('/users/:id', users.GetById);
-router.get('/users/user/:nickName', users.GetByNickName);
-router.get('/users/name/:name', users.GetByName);
+router.delete('/users/:id', [isAuth], users.Delete);
+router.patch('/users/:id', [isAuth], upload.single('avatar'), users.Update);
+router.get('/users/:id', [isAdmin], users.GetById);
+router.get('/users/user/:nickName', [isAdmin], users.GetByNickName);
+router.get('/users/name/:name', [isAdmin], users.GetByName);
 router.post('/users/login', users.Login);
 
 router.get('/decks', decks.GetAll);
-router.post('/decks', upload.single('image'), decks.Create);
-router.delete('/decks/:id', decks.Delete);
-router.patch('/decks/:id', upload.single('image'), decks.Update);
+router.post('/decks', [isAuth], upload.single('image'), decks.Create);
+router.delete('/decks/:id', [isAuth], decks.Delete);
+router.patch('/decks/:id', [isAuth], upload.single('image'), decks.Update);
 router.get('/decks/:id', decks.GetById);
 router.get('/decks/deck/:title', decks.GetByTitle);
 router.get('/decks/author/:author', decks.GetByAuthor);
 
 router.get('/cards', cards.GetAll);
-router.post('/cards', upload.single('questionFile'), cards.Create);
-router.delete('/cards/:id', cards.Delete);
-router.patch('/cards/:id', upload.single('questionFile'), cards.Update);
+router.post('/cards', [isAuth], upload.single('questionFile'), cards.Create);
+router.delete('/cards/:id', [isAuth], cards.Delete);
+router.patch('/cards/:id', [isAuth], upload.single('questionFile'), cards.Update);
 router.get('/cards/:id', cards.GetById);
 
 router.get('/difficulties', difficulties.GetAll);
