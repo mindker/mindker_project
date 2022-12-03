@@ -98,7 +98,6 @@ exports.Update = async (id, updatedUser, req) => {
     req.file
       ? (updatedUser.avatar = req.file.path)
       : (updatedUser.avatar = "there's no image");
-    console.log(updatedUser.password);
     updatedUser.password &&
       (updatedUser.password = bcrypt.hashSync(updatedUser.password, 8));
 
