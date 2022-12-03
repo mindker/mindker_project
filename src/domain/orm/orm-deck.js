@@ -74,7 +74,7 @@ exports.Update = async (id, updatedDeck, req) => {
     olderDeck.image && deleteFile(olderDeck.image);
     req.file
       ? (updatedDeck.image = req.file.path)
-      : (updatedDeck.image = "there's no image");
+      : (updatedDeck.image = 'image did not change');
     return await conn.db.connMongo.Deck.findByIdAndUpdate(id, updatedDeck);
   } catch (error) {
     magic.LogDanger('Cannot Update deck', error);

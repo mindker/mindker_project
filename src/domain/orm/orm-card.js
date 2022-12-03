@@ -43,8 +43,8 @@ exports.Delete = async (id) => {
   try {
     const cardToDelete = await conn.db.connMongo.Card.findById(id);
     const deck = await conn.db.connMongo.Deck.findById(cardToDelete.idDeck);
-    const user = await conn.db.connMongo.User.findById(deck.author);
-    if (deck && (!deck.isOpen || user.role == 'admin')) {
+
+    if (deck) {
       if (cardToDelete.questionFile) {
         await deleteFile(cardToDelete.questionFile);
       }
@@ -58,7 +58,7 @@ exports.Delete = async (id) => {
       return await conn.db.connMongo.Card.findByIdAndDelete(id);
     } else {
       return magic.LogDanger(
-        'Cannot Delete Card because you are not an admin or this deck is not private',
+        'Cannot Delete Card because the deck it belongs does not exist',
       );
     }
   } catch (error) {
@@ -73,7 +73,7 @@ exports.Update = async (id, updatedCard, req) => {
     olderCard.image && deleteFile(olderCard.image);
     req.file
       ? (updatedCard.image = req.file.path)
-      : (updatedCard.image = "there's no image");
+      : (updatedCard.image = 'image did not change');
     return await conn.db.connMongo.Card.findByIdAndUpdate(id, updatedCard);
   } catch (error) {
     magic.LogDanger('Cannot Update Card', error);
