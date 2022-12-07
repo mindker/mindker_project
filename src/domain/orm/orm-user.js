@@ -8,6 +8,7 @@ exports.GetAll = async (limit = 0, skip = 0) => {
   try {
     return await conn.db.connMongo.User.find()
       .populate('createdDecks')
+      .populate('downloadedDecks')
       .skip(skip)
       .limit(limit);
   } catch (error) {
@@ -55,7 +56,9 @@ exports.Login = async (nickname, req) => {
   try {
     const userInfo = await conn.db.connMongo.User.findOne({
       nickname: nickname,
-    });
+    })
+      .populate('downloadedDecks')
+      .populate('createdDecks');
 
     if (bcrypt.compareSync(req.body.password, userInfo.password)) {
       userInfo.password = null;

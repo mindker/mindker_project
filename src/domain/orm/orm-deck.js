@@ -79,7 +79,9 @@ exports.Update = async (id, updatedDeck, req) => {
     req.file
       ? (updatedDeck.image = req.file.path)
       : (updatedDeck.image = 'image did not change');
-    return await conn.db.connMongo.Deck.findByIdAndUpdate(id, updatedDeck);
+    return await conn.db.connMongo.Deck.findByIdAndUpdate(id, updatedDeck)
+      .populate('author')
+      .populate('cards');
   } catch (error) {
     magic.LogDanger('Cannot Update deck', error);
     return await { err: { code: 123, message: error } };
