@@ -99,9 +99,11 @@ exports.GetById = async (id) => {
 
 exports.GetByTitle = async (title) => {
   try {
-    return await conn.db.connMongo.Deck.findOne({ title: title })
+    const array = await conn.db.connMongo.Deck.findOne({ title: title })
       .populate('author')
       .populate('cards');
+    const arrayObject = await new Array(array);
+    return await arrayObject;
   } catch (error) {
     magic.LogDanger('Cannot get the deck by its title', error);
     return await { err: { code: 123, message: error } };
