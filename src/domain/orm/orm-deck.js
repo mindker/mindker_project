@@ -82,6 +82,7 @@ exports.Update = async (id, updatedDeck, req) => {
     return await conn.db.connMongo.Deck.findByIdAndUpdate(id, updatedDeck)
       .populate('author')
       .populate('cards');
+
   } catch (error) {
     magic.LogDanger('Cannot Update deck', error);
     return await { err: { code: 123, message: error } };

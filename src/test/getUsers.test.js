@@ -6,6 +6,7 @@ const app = require('../server');
 let token =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTWFyaW8gQmVhIiwibmlja25hbWUiOiJNYXJpbyBCZWEiLCJlbWFpbCI6Ik1hcmlvQmVhQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY3MDQxMDUwNiwiZXhwIjoxNjcwNTE4NTA2fQ.GVb7i-yvl6c3sokJk7lB5pFx-5Q0_zNYZtpgaySp0K0';
 
+
 describe('Get Users', () => {
   it('should create a new deck', async () => {
     const res = await request(app)
