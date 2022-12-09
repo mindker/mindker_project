@@ -6,10 +6,9 @@ const { deleteFile } = require('../../middlewares/delete-file');
 
 exports.GetAll = async (limit = 0, skip = 0) => {
   try {
-    return await conn.db.connMongo.User.find()
+    return await conn.db.connMongo.User.find({ isOpen: true })
       .populate('createdDecks')
       .populate('downloadedDecks')
-
       .skip(skip)
       .limit(limit);
   } catch (error) {
