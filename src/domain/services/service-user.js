@@ -115,8 +115,15 @@ exports.Login = async (req, res) => {
   } catch (err) {
     console.log('err = ', err);
     return res
-      .status(enum_.CODE_INTERNAL_SERVER_ERROR)
-      .send(await magic.ResponseService('Failure', enum_.CRASH_LOGIC, 'err', ''));
+      .status(enum_.CODE_INVALID_PASSWORD)
+      .send(
+        await magic.ResponseService(
+          'Failure',
+          enum_.CRASH_LOGIC,
+          'Incorrect password',
+          '',
+        ),
+      );
   }
 };
 
