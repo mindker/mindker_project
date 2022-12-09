@@ -9,6 +9,7 @@ exports.GetAll = async (limit = 0, skip = 0) => {
     return await conn.db.connMongo.User.find()
       .populate('createdDecks')
       .populate('downloadedDecks')
+
       .skip(skip)
       .limit(limit);
   } catch (error) {
