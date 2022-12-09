@@ -95,12 +95,20 @@ exports.Login = async (req, res) => {
 
     if (Nickname && Password) {
       let respOrm = await ormUser.Login(Nickname, req);
-
+      console.log(respOrm.err);
       if (respOrm.err) {
-        (status = 'Failure'),
-          (errorcode = respOrm.err.code),
-          (message = respOrm.err.messsage),
-          (statuscode = enum_.CODE_BAD_REQUEST);
+        if (respOrm.err) {
+          (status = 'Failure'),
+            (errorcode = respOrm.err.code),
+            (message = 'Invalid nickname'),
+            (statuscode = enum_.CODE_INVALID_NICKNAME);
+        }
+        if (respOrm.err) {
+          (status = 'Failure'),
+            (errorcode = respOrm.err.code),
+            (message = 'Incorrect Password'),
+            (statuscode = enum_.CODE_INVALID_PASSWORD);
+        }
       } else {
         (message = 'User logged in'), (data = respOrm), (statuscode = enum_.CODE_OK);
       }
