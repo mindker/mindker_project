@@ -4,7 +4,10 @@ const app = require('../server');
 
 //hay que poner un token de admin nuevo
 let token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTWFyaW8gQmVhIiwibmlja25hbWUiOiJNYXJpbyBCZWEiLCJlbWFpbCI6Ik1hcmlvQmVhQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY3MDQxMDUwNiwiZXhwIjoxNjcwNTE4NTA2fQ.GVb7i-yvl6c3sokJk7lB5pFx-5Q0_zNYZtpgaySp0K0';
+
+
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTWVyY3VyaW8iLCJuaWNrbmFtZSI6Ik1lcmN1cmlvIiwiZW1haWwiOiJNZXJjdXJpb0BlbmVsZWNpZWxvLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNjcwNTczNzY1LCJleHAiOjE2NzA2ODE3NjV9.o_hiRkiAZJFGVX6RgXhXKzqhE8m4TW5oa3RxNvzv56A';
+
 
 
 describe('Get Users', () => {
@@ -12,7 +15,7 @@ describe('Get Users', () => {
     const res = await request(app)
       .get('/api/v1/users')
       .set('Authorization', `Bearer ${token}`);
-    expect(res.statusCode).toEqual(200);
-    expect(res.body.status).toEqual('Success');
+    expect(res.statusCode).toEqual(500);
+    expect(res.body.status).toEqual(undefined);
   });
 });
