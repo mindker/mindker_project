@@ -92,15 +92,19 @@ exports.Login = async (req, res) => {
   try {
     const Nickname = req.body.nickname;
     const Password = req.body.password;
-
     if (Nickname && Password) {
       let respOrm = await ormUser.Login(Nickname, req);
-
       if (respOrm.err) {
         (status = 'Failure'),
           (errorcode = respOrm.err.code),
-          (message = respOrm.err.messsage),
-          (statuscode = enum_.CODE_BAD_REQUEST);
+          (message = 'Incorrect Password'),
+          (statuscode = enum_.CODE_INVALID_PASSWORD);
+      }
+      if (respOrm.err) {
+        (status = 'Failure'),
+          (errorcode = respOrm.err.code),
+          (message = 'Incorrect Nickname'),
+          (statuscode = enum_.CODE_INVALID_NICKNAME);
       } else {
         (message = 'User logged in'), (data = respOrm), (statuscode = enum_.CODE_OK);
       }
@@ -120,7 +124,7 @@ exports.Login = async (req, res) => {
         await magic.ResponseService(
           'Failure',
           enum_.CRASH_LOGIC,
-          'Incorrect password',
+          'Incorrect Password',
           '',
         ),
       );
