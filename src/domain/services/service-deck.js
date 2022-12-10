@@ -48,7 +48,7 @@ exports.Create = async (req, res) => {
     const Likes = req.body.likes;
     const Tags = req.body.tags;
 
-    if (Title && Cards && IsOpen && Author) {
+    if (Title && Description && IsOpen && Author) {
       let respOrm = await ormDeck.Create(
         Title,
         Description,
