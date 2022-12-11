@@ -117,6 +117,7 @@ exports.Update = async (req, res) => {
 
     const updatedDifficulty = {
       idUser: req.body.idUser,
+      idCard: req.body.idCard,
       level: req.body.level,
       _id: id,
     };
