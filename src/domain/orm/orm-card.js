@@ -35,7 +35,7 @@ exports.Create = async (question, answer, resources, difficulty, idDeck, req) =>
       await deck.save();
     }
     data.save();
-    return true;
+    return data;
   } catch (error) {
     magic.LogDanger('Cannot Create Card', error);
     return await { err: { code: 123, message: error } };
