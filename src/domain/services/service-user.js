@@ -47,7 +47,7 @@ exports.Register = async (req, res) => {
     const CreatedDecks = req.body.createdDecks;
     const Role = req.body.role;
     const DownloadedDecks = req.body.downloadedDecks;
-    if (Name && Nickname && Email && Password) {
+    if (Name && Nickname && Email) {
       let respOrm = await ormUser.Register(
         Name,
         Nickname,

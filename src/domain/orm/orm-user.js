@@ -44,8 +44,22 @@ exports.Register = async (
     }
 
     data.password = bcrypt.hashSync(data.password, 8);
+
+    const token = jwt.sign(
+      {
+        name: data.name,
+        nickname: data.nickname,
+        email: data.email,
+        role: data.role,
+      },
+      req.app.get('secretKey'),
+      { expiresIn: '30h' },
+    );
     data.save();
-    return true;
+    return {
+      user: data,
+      token: token,
+    };
   } catch (error) {
     magic.LogDanger('Cannot Create user', error);
     return await { err: { code: 123, message: error } };
