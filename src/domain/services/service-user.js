@@ -193,8 +193,6 @@ exports.Update = async (req, res) => {
           (message = respOrm.err.messsage),
           (statuscode = enum_.CODE_BAD_REQUEST);
       } else {
-        console.log('resporm: ' + respOrm);
-
         if (Object.keys(respOrm).length) {
           (message = 'User updated'), (statuscode = enum_.CODE_OK), (data = updatedUser);
         } else {

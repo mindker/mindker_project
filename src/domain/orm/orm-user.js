@@ -114,7 +114,6 @@ exports.Delete = async (id) => {
 
 exports.Update = async (id, updatedUser, req) => {
   try {
-    console.log('hemos entrado aqui sin token?');
     const olderUser = await conn.db.connMongo.User.findById(id);
     olderUser.avatar && deleteFile(olderUser.avatar);
     req.file
