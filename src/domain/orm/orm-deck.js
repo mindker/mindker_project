@@ -30,7 +30,8 @@ exports.Create = async (title, description, cards, isOpen, idUser, likes, tags, 
     if (req.file) {
       data.image = req.file.path;
     } else {
-      data.image = "there's no image";
+      data.image =
+        'https://res.cloudinary.com/drprserzu/image/upload/v1670867991/mindker/dirhbvxwym6mywamacog.png';
     }
 
     const user = await conn.db.connMongo.User.findById(idUser);
