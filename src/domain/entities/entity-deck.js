@@ -6,8 +6,7 @@ module.exports = (db) => {
       image: { type: String },
       cards: [{ type: db.Schema.Types.ObjectId, ref: 'Cards' }],
       isOpen: { type: Boolean, required: true },
-      author: { type: db.Schema.Types.ObjectId, ref: 'Users' },
-      likes: { type: Number, default: 0 },
+      likes: [{ type: db.Schema.Types.ObjectId, ref: 'Users' }],
       tags: [{ type: String }],
     },
     {

@@ -44,9 +44,8 @@ exports.Register = async (req, res) => {
     const Nickname = req.body.nickname;
     const Email = req.body.email;
     const Password = req.body.password;
-    const CreatedDecks = req.body.createdDecks;
     const Role = req.body.role;
-    const DownloadedDecks = req.body.downloadedDecks;
+    const decks = req.body.decks;
     if (Name && Nickname && Email) {
       let respOrm = await ormUser.Register(
         Name,
@@ -54,8 +53,7 @@ exports.Register = async (req, res) => {
         Email,
         Password,
         req,
-        CreatedDecks,
-        DownloadedDecks,
+        decks,
         Role,
       );
       if (respOrm.err) {
@@ -180,8 +178,7 @@ exports.Update = async (req, res) => {
       nickname: req.body.nickname,
       password: req.body.password,
       email: req.body.email,
-      createdDecks: req.body.createdDecks,
-      downloadedDecks: req.body.downloadedDecks,
+      decks: req.body.decks,
       _id: id,
     };
 
@@ -193,8 +190,6 @@ exports.Update = async (req, res) => {
           (message = respOrm.err.messsage),
           (statuscode = enum_.CODE_BAD_REQUEST);
       } else {
-        console.log('resporm: ' + respOrm);
-
         if (Object.keys(respOrm).length) {
           (message = 'User updated'), (statuscode = enum_.CODE_OK), (data = updatedUser);
         } else {

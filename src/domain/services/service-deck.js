@@ -44,17 +44,15 @@ exports.Create = async (req, res) => {
     const Description = req.body.description;
     const Cards = req.body.cards;
     const IsOpen = req.body.isOpen;
-    const Author = req.body.author;
     const Likes = req.body.likes;
     const Tags = req.body.tags;
 
-    if (Title && Description && IsOpen && Author) {
+    if (Title && Description && IsOpen) {
       let respOrm = await ormDeck.Create(
         Title,
         Description,
         Cards,
         IsOpen,
-        Author,
         Likes,
         Tags,
         req,
@@ -135,7 +133,6 @@ exports.Update = async (req, res) => {
       image: req.body.image,
       cards: req.body.cards,
       isOpen: req.body.isOpen,
-      author: req.body.author,
       likes: req.body.likes,
       tags: req.body.tags,
       _id: id,
@@ -208,35 +205,6 @@ exports.GetByTitle = async (req, res) => {
     const { title } = req.params;
     let respOrm = await ormDeck.GetByTitle(title);
 
-    if (respOrm.err) {
-      (status = 'Failure'),
-        (errorcode = respOrm.err.code),
-        (message = respOrm.err.message),
-        (statuscode = enum_.CODE_BAD_REQUEST);
-    } else {
-      (message = 'Success getting the deck'),
-        (data = respOrm),
-        (statuscode = data ? enum_.CODE_OK : enum_.CODE_NO_CONTENT);
-    }
-    response = await magic.ResponseService(status, errorcode, message, data);
-    return res.status(statuscode).send(response);
-  } catch (error) {
-    magic.LogDanger('error: ', error);
-    response = await magic.ResponseService('Failure', enum_.CODE_BAD_REQUEST, error, '');
-    return res.status(enum_.CODE_INTERNAL_SERVER_ERROR).send(response);
-  }
-};
-
-exports.GetByAuthor = async (req, res) => {
-  let status = 'Success';
-  let errorcode = '';
-  let message = '';
-  let data = '';
-  let statuscode = 0;
-  let response = {};
-  try {
-    const { author } = req.params;
-    let respOrm = await ormDeck.GetByAuthor(author);
     if (respOrm.err) {
       (status = 'Failure'),
         (errorcode = respOrm.err.code),
