@@ -13,16 +13,19 @@ exports.GetAll = async (limit = 0, skip = 0) => {
 
 exports.Create = async (question, answer, req) => {
   try {
+    console.log('entramos en el try');
     const data = await new conn.db.connMongo.Card({
       question: question,
       answer: answer,
     });
+    console.log('después del try antes de req.file');
     if (req.file) {
       data.questionFile = req.file.path;
     } else {
       data.questionFile =
         'https://res.cloudinary.com/drprserzu/image/upload/v1670867991/mindker/dirhbvxwym6mywamacog.png';
     }
+    console.log('después de guardar el deck');
     data.save();
     return data;
   } catch (error) {
