@@ -42,18 +42,10 @@ exports.Create = async (req, res) => {
   try {
     const Question = req.body.question;
     const Answer = req.body.answer;
-    const Difficulty = req.body.difficulty;
     const Resources = req.body.resources;
     const IdDeck = req.body.idDeck;
     if (Question && Answer) {
-      let respOrm = await ormCard.Create(
-        Question,
-        Answer,
-        Difficulty,
-        Resources,
-        IdDeck,
-        req,
-      );
+      let respOrm = await ormCard.Create(Question, Answer, Resources, IdDeck, req);
       if (respOrm.err) {
         (status = 'Failure'),
           (errorcode = respOrm.err.code),
