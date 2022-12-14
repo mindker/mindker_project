@@ -1,3 +1,4 @@
+const { setError } = require('../utils/errors/setError');
 const jwt = require('jsonwebtoken');
 
 const magic = require('../utils/magic');
