@@ -4,9 +4,7 @@ module.exports = (db) => {
       question: { type: String, required: true, trim: true },
       questionFile: { type: String },
       answer: { type: String, required: true, trim: true },
-      difficulty: [{ type: db.Schema.Types.ObjectId, ref: 'Difficulties' }],
-      resources: [{ type: String }],
-      idDeck: { type: db.Schema.Types.ObjectId, ref: 'Decks' },
+      difficulty: { type: String, enum: ['Easy', 'Medium', 'Hard'], default: 'Hard' },
     },
     {
       timestamps: true,

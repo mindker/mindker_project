@@ -6,8 +6,7 @@ module.exports = (db) => {
       email: { type: String, required: true, trim: true },
       password: { type: String, required: true, trim: true },
       avatar: { type: String },
-      createdDecks: [{ type: db.Schema.Types.ObjectId, ref: 'Decks' }],
-      downloadedDecks: [{ type: db.Schema.Types.ObjectId, ref: 'Decks' }],
+      decks: [{ type: db.Schema.Types.ObjectId, ref: 'Decks' }],
       role: { type: String, default: 'user' },
     },
     {

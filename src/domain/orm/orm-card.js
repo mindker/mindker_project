@@ -4,36 +4,35 @@ const { deleteFile } = require('../../middlewares/delete-file');
 
 exports.GetAll = async (limit = 0, skip = 0) => {
   try {
-    return await conn.db.connMongo.Card.find()
-      .populate('difficulty')
-      .skip(skip)
-      .limit(limit);
+    return await conn.db.connMongo.Card.find().skip(skip).limit(limit);
   } catch (error) {
     magic.LogDanger('Cannot getAll cards', error);
     return await { err: { code: 123, message: error } };
   }
 };
 
-exports.Create = async (question, answer, resources, difficulty, idDeck, req) => {
+exports.Create = async (question, answer, idDeck, req) => {
   try {
+    console.log('entramos en el try');
     const data = await new conn.db.connMongo.Card({
       question: question,
       answer: answer,
-      resources: resources,
-      difficulty: difficulty,
       idDeck: idDeck,
     });
+    console.log('después del try antes de req.file');
     if (req.file) {
       data.questionFile = req.file.path;
     } else {
       data.questionFile = 'no image question';
     }
+    console.log('antes de traerse el deck');
     const deck = await conn.db.connMongo.Deck.findById(idDeck);
     if (deck) {
       data.idDeck = deck._id;
       deck.cards = deck.cards.concat(data._id);
       await deck.save();
     }
+    console.log('después de guardar el deck');
     data.save();
     return data;
   } catch (error) {
@@ -86,7 +85,7 @@ exports.Update = async (id, updatedCard, req) => {
 
 exports.GetById = async (id) => {
   try {
-    return await conn.db.connMongo.Card.findById(id).populate('difficulty');
+    return await conn.db.connMongo.Card.findById(id);
   } catch (error) {
     magic.LogDanger('Cannot get the Card by its ID', error);
     return await { err: { code: 123, message: error } };

@@ -7,8 +7,7 @@ const { deleteFile } = require('../../middlewares/delete-file');
 exports.GetAll = async (limit = 0, skip = 0) => {
   try {
     return await conn.db.connMongo.User.find({ isOpen: true })
-      .populate('createdDecks')
-      .populate('downloadedDecks')
+      .populate('decks')
       .skip(skip)
       .limit(limit);
   } catch (error) {
@@ -16,24 +15,14 @@ exports.GetAll = async (limit = 0, skip = 0) => {
   }
 };
 
-exports.Register = async (
-  Name,
-  Nickname,
-  Email,
-  Password,
-  req,
-  CreatedDecks,
-  DownloadedDecks,
-  Role,
-) => {
+exports.Register = async (Name, Nickname, Email, Password, req, decks, Role) => {
   try {
     const data = await new conn.db.connMongo.User({
       name: Name,
       nickname: Nickname,
       email: Email,
       password: Password,
-      createdDecks: CreatedDecks,
-      downloadedDecks: DownloadedDecks,
+      decks: decks,
       role: Role,
     });
 
@@ -70,9 +59,7 @@ exports.Login = async (nickname, req) => {
   try {
     const userInfo = await conn.db.connMongo.User.findOne({
       nickname: nickname,
-    })
-      .populate('downloadedDecks')
-      .populate('createdDecks');
+    }).populate('decks');
 
     if (bcrypt.compareSync(req.body.password, userInfo.password)) {
       userInfo.password = null;
@@ -131,7 +118,7 @@ exports.Update = async (id, updatedUser, req) => {
 
 exports.GetById = async (id) => {
   try {
-    return await conn.db.connMongo.User.findById(id); /* .populate('author'); */
+    return await conn.db.connMongo.User.findById(id);
   } catch (error) {
     magic.LogDanger('Cannot get the user by its ID', error);
     return await { err: { code: 123, message: error } };
