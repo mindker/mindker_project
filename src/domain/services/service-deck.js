@@ -42,21 +42,9 @@ exports.Create = async (req, res) => {
   try {
     const Title = req.body.title;
     const Description = req.body.description;
-    const Cards = req.body.cards;
-    const IsOpen = req.body.isOpen;
-    const Likes = req.body.likes;
-    const Tags = req.body.tags;
 
-    if (Title && Description && IsOpen) {
-      let respOrm = await ormDeck.Create(
-        Title,
-        Description,
-        Cards,
-        IsOpen,
-        Likes,
-        Tags,
-        req,
-      );
+    if (Title && Description) {
+      let respOrm = await ormDeck.Create(Title, Description, req);
       if (respOrm.err) {
         (status = 'Failure'),
           (errorcode = respOrm.err.code),

@@ -11,26 +11,19 @@ exports.GetAll = async (limit = 0, skip = 0) => {
   }
 };
 
-exports.Create = async (question, answer, idDeck, req) => {
+exports.Create = async (question, answer, req) => {
   try {
     console.log('entramos en el try');
     const data = await new conn.db.connMongo.Card({
       question: question,
       answer: answer,
-      idDeck: idDeck,
     });
     console.log('después del try antes de req.file');
     if (req.file) {
       data.questionFile = req.file.path;
     } else {
-      data.questionFile = 'no image question';
-    }
-    console.log('antes de traerse el deck');
-    const deck = await conn.db.connMongo.Deck.findById(idDeck);
-    if (deck) {
-      data.idDeck = deck._id;
-      deck.cards = deck.cards.concat(data._id);
-      await deck.save();
+      data.questionFile =
+        'https://res.cloudinary.com/drprserzu/image/upload/v1670867991/mindker/dirhbvxwym6mywamacog.png';
     }
     console.log('después de guardar el deck');
     data.save();
@@ -44,25 +37,10 @@ exports.Create = async (question, answer, idDeck, req) => {
 exports.Delete = async (id) => {
   try {
     const cardToDelete = await conn.db.connMongo.Card.findById(id);
-    const deck = await conn.db.connMongo.Deck.findById(cardToDelete.idDeck);
-
-    if (deck) {
-      if (cardToDelete.questionFile) {
-        await deleteFile(cardToDelete.questionFile);
-      }
-      for (const card of deck.cards) {
-        if (card == id) {
-          const position = deck.cards.indexOf(card);
-          deck.cards.splice(position, 1);
-        }
-      }
-      await deck.save();
-      return await conn.db.connMongo.Card.findByIdAndDelete(id);
-    } else {
-      return magic.LogDanger(
-        'Cannot Delete Card because the deck it belongs does not exist',
-      );
+    if (cardToDelete.questionFile) {
+      await deleteFile(cardToDelete.questionFile);
     }
+    return await conn.db.connMongo.Card.findByIdAndDelete(id);
   } catch (error) {
     magic.LogDanger('Cannot Delete Card', error);
     return await { err: { code: 123, message: error } };
