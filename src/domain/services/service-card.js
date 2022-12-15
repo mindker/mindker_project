@@ -42,7 +42,6 @@ exports.Create = async (req, res) => {
   try {
     const Question = req.body.question;
     const Answer = req.body.answer;
-
     if (Question && Answer) {
       let respOrm = await ormCard.Create(Question, Answer, req);
       if (respOrm.err) {

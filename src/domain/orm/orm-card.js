@@ -12,6 +12,7 @@ exports.GetAll = async (limit = 0, skip = 0) => {
 };
 
 exports.Create = async (question, answer, req) => {
+
   try {
     console.log('entramos en el try');
     const data = await new conn.db.connMongo.Card({
@@ -22,6 +23,7 @@ exports.Create = async (question, answer, req) => {
     if (req.file) {
       data.questionFile = req.file.path;
     } else {
+
       data.questionFile =
         'https://res.cloudinary.com/drprserzu/image/upload/v1670867991/mindker/dirhbvxwym6mywamacog.png';
     }
