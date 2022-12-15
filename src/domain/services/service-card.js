@@ -118,6 +118,7 @@ exports.Update = async (req, res) => {
       question: req.body.question,
       answer: req.body.answer,
        _id: id,
+
     };
 
     if (id && updatedCard) {
