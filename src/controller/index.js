@@ -17,7 +17,7 @@ router.get('/users/name/:name', users.GetByName);
 router.post('/users/login', users.Login);
 
 router.get('/decks', decks.GetAll);
-router.post('/decks', [isAuth], upload.single('image'), decks.Create);
+router.post('/decks', upload.single('image'), decks.Create);
 router.delete('/decks/:id', [isAuth], decks.Delete);
 router.patch('/decks/:id', [isAuth], upload.single('image'), decks.Update);
 router.get('/decks/:id', decks.GetById);

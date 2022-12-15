@@ -42,6 +42,7 @@ exports.Create = async (req, res) => {
   try {
     const Question = req.body.question;
     const Answer = req.body.answer;
+
     if (Question && Answer) {
       let respOrm = await ormCard.Create(Question, Answer, req);
       if (respOrm.err) {
@@ -116,9 +117,7 @@ exports.Update = async (req, res) => {
     const updatedCard = {
       question: req.body.question,
       answer: req.body.answer,
-      difficulty: req.body.difficulty,
-      resources: req.body.resources,
-      _id: id,
+       _id: id,
     };
 
     if (id && updatedCard) {
