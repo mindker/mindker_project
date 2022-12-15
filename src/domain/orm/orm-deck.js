@@ -4,10 +4,7 @@ const { deleteFile } = require('../../middlewares/delete-file');
 
 exports.GetAll = async (limit = 0, skip = 0) => {
   try {
-    return await conn.db.connMongo.Deck.find({ isOpen: true })
-      .populate('cards')
-      .skip(skip)
-      .limit(limit);
+    return await conn.db.connMongo.Deck.find().populate('cards').skip(skip).limit(limit);
   } catch (error) {
     magic.LogDanger('Cannot getAll decks', error);
     return await { err: { code: 123, message: error } };

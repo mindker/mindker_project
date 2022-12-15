@@ -59,7 +59,7 @@ exports.Login = async (nickname, req) => {
   try {
     const userInfo = await conn.db.connMongo.User.findOne({
       nickname: nickname,
-    }).populate('decks');
+    });
 
     if (bcrypt.compareSync(req.body.password, userInfo.password)) {
       userInfo.password = null;
@@ -106,7 +106,8 @@ exports.Update = async (id, updatedUser, req) => {
     req.file
       ? (updatedUser.avatar = req.file.path)
       : (updatedUser.avatar = 'avatar did not change');
-    updatedUser.password &&
+    console.log('esto es el updateuser', updatedUser);
+    updatedUser.password !== undefined &&
       (updatedUser.password = bcrypt.hashSync(updatedUser.password, 8));
 
     return await conn.db.connMongo.User.findByIdAndUpdate(id, updatedUser);
