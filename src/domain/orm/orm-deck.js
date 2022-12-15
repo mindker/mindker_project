@@ -14,15 +14,11 @@ exports.GetAll = async (limit = 0, skip = 0) => {
   }
 };
 
-exports.Create = async (title, description, cards, isOpen, likes, tags, req) => {
+exports.Create = async (title, description, req) => {
   try {
     const data = await new conn.db.connMongo.Deck({
       title: title,
       description: description,
-      cards: cards,
-      isOpen: isOpen,
-      likes: likes,
-      tags: tags,
     });
 
     if (req.file) {

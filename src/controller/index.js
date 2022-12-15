@@ -7,13 +7,13 @@ const { upload } = require('../middlewares/file');
 const { isAdmin } = require('../middlewares/admin.middleware');
 const { isAuth } = require('../middlewares/auth.middleware');
 
-router.get('/users', [isAdmin], users.GetAll);
+router.get('/users', users.GetAll); //poner isadmin
 router.post('/users', upload.single('avatar'), users.Register);
 router.delete('/users/:id', [isAuth], users.Delete);
 router.patch('/users/:id', [isAuth], upload.single('avatar'), users.Update);
 router.get('/users/:id', [isAdmin], users.GetById);
-router.get('/users/user/:nickName', [isAdmin], users.GetByNickName);
-router.get('/users/name/:name', [isAdmin], users.GetByName);
+router.get('/users/user/:nickName', users.GetByNickName);
+router.get('/users/name/:name', users.GetByName);
 router.post('/users/login', users.Login);
 
 router.get('/decks', decks.GetAll);

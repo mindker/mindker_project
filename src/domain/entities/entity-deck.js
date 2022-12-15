@@ -5,7 +5,8 @@ module.exports = (db) => {
       description: { type: String, required: true, trim: true },
       image: { type: String },
       cards: [{ type: db.Schema.Types.ObjectId, ref: 'Cards' }],
-      isOpen: { type: Boolean, required: true },
+      isOpen: { type: Boolean },
+
       likes: [{ type: db.Schema.Types.ObjectId, ref: 'Users' }],
       tags: [{ type: String }],
     },
