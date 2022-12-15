@@ -117,8 +117,6 @@ exports.Update = async (req, res) => {
     const updatedCard = {
       question: req.body.question,
       answer: req.body.answer,
-      difficulty: req.body.difficulty,
-      resources: req.body.resources,
       _id: id,
     };
 
