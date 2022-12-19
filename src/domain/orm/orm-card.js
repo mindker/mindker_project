@@ -12,22 +12,17 @@ exports.GetAll = async (limit = 0, skip = 0) => {
 };
 
 exports.Create = async (question, answer, req) => {
-
   try {
-    console.log('entramos en el try');
     const data = await new conn.db.connMongo.Card({
       question: question,
       answer: answer,
     });
-    console.log('después del try antes de req.file');
     if (req.file) {
       data.questionFile = req.file.path;
     } else {
-
       data.questionFile =
         'https://res.cloudinary.com/drprserzu/image/upload/v1670867991/mindker/dirhbvxwym6mywamacog.png';
     }
-    console.log('después de guardar el deck');
     data.save();
     return data;
   } catch (error) {
@@ -53,9 +48,7 @@ exports.Update = async (id, updatedCard, req) => {
   try {
     const olderCard = await conn.db.connMongo.Card.findById(id);
     olderCard.image && deleteFile(olderCard.image);
-    req.file
-      ? (updatedCard.image = req.file.path)
-      : (updatedCard.image = 'image did not change');
+    req.file ? (updatedCard.image = req.file.path) : null;
     return await conn.db.connMongo.Card.findByIdAndUpdate(id, updatedCard);
   } catch (error) {
     magic.LogDanger('Cannot Update Card', error);

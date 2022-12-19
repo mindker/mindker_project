@@ -17,14 +17,12 @@ exports.Create = async (title, description, req) => {
       title: title,
       description: description,
     });
-
     if (req.file) {
       data.image = req.file.path;
     } else {
       data.image =
         'https://res.cloudinary.com/drprserzu/image/upload/v1670867991/mindker/dirhbvxwym6mywamacog.png';
     }
-
     data.save();
     return data;
   } catch (error) {
@@ -37,9 +35,7 @@ exports.Update = async (id, updatedDeck, req) => {
   try {
     const olderDeck = await conn.db.connMongo.Deck.findById(id);
     olderDeck.image && deleteFile(olderDeck.image);
-    req.file
-      ? (updatedDeck.image = req.file.path)
-      : (updatedDeck.image = 'image did not change');
+    req.file ? (updatedDeck.image = req.file.path) : null;
     return await conn.db.connMongo.Deck.findByIdAndUpdate(id, updatedDeck).populate(
       'cards',
     );
